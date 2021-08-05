@@ -2,10 +2,10 @@
   <div class="flip-container" :class="{hover: flip}" @click="flip = false">
     <div class="flipper">
       <div class="front">
-        <card :image-url="card.frontSide" />
+        <slot name="front" />
       </div>
       <div class="back">
-        <card :image-url="card.backSide" />
+        <slot name="back" />
       </div>
     </div>
   </div>
@@ -42,8 +42,8 @@ export default {
 }
 
 .flip-container, .front, .back {
-  width: 230px;
-  height: 230px;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
 }
 
@@ -51,14 +51,14 @@ export default {
 .flipper {
   transition: 0.6s;
   transform-style: preserve-3d;
-
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 
 /* hide back of pane during swap */
 .front, .back {
   backface-visibility: hidden;
-
   position: absolute;
   top: 0;
   left: 0;
