@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <plat-field></plat-field>
     <router-view/>
   </div>
 </template>
@@ -30,3 +27,11 @@
   }
 }
 </style>
+<script>
+import PlatField from "./components/PlayField";
+export default {
+  components: {
+    PlatField
+  },
+}
+</script>
