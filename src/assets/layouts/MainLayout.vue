@@ -21,8 +21,7 @@ export default {
   width: 100%;
   &__content {
     box-sizing: border-box;
-    padding-right: 15%;
-    padding-left: 15%;
+    padding: 10px calc(50% - 415px);
     width: 100%;
     border: 3px solid green;
   }

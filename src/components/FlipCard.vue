@@ -1,33 +1,26 @@
 <template>
-  <div class="flip-container" :class="{hover: flip}" @click="flip = false">
-    <div class="flipper">
-      <div class="front">
-        <slot name="front" />
-      </div>
-      <div class="back">
-        <slot name="back" />
+  <transition name="flip">
+    <div
+        class="flip-container"
+        :class="{hover: flip, active: isActive}"
+        @click="$emit('flipping', $event);"
+    >
+      <div class="flipper">
+        <div class="front">
+          <slot name="front" />
+        </div>
+        <div class="back">
+          <slot name="back" />
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
-import Card from "./Card";
 export default {
   name: "FlipCard",
-  components: {Card},
-  props: ['card'],
-  data() {
-    return {
-      flip: true
-    }
-  },
-  watch: {
-    flip() {
-      setTimeout(() => {this.flip = true}, 1000)
-      console.log('flip')
-    }
-  }
+  props: ['flip', 'isActive'],
 }
 </script>
 
@@ -40,6 +33,11 @@ export default {
 .flip-container.hover .flipper {
   transform: rotateY(180deg);
 }
+.flip-container.active .flipper {
+  -webkit-box-shadow: 0px 0px 11px -1px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 0px 0px 11px -1px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 11px -1px rgba(255, 255, 255, 1);
+}
 
 .flip-container, .front, .back {
   width: 100%;
@@ -50,6 +48,7 @@ export default {
 /* flip speed goes here */
 .flipper {
   transition: 0.6s;
+  border-radius: 10px;
   transform-style: preserve-3d;
   width: 100%;
   height: 100%;
@@ -82,7 +81,21 @@ export default {
   background: -o-linear-gradient(#c65e57, #873630);
   background: -moz-linear-gradient(#c65e57, #873630);
   background: linear-gradient(#c65e57, #873630);
-
 }
-
+.flip-enter-active {
+  animation: flip-in 0.6s;
+}
+.flip-leave-active {
+  animation: flip-in 0.6s reverse;
+}
+@keyframes flip-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 </style>
