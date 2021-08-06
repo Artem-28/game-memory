@@ -68,19 +68,19 @@ export default {
   z-index: 2;
   /* for firefox 31 */
   transform: rotateY(0deg);
-  background: -webkit-linear-gradient(#3d68bf, #0d1423);
+/*  background: -webkit-linear-gradient(#3d68bf, #0d1423);
   background: -o-linear-gradient(#3d68bf, #0d1423);
   background: -moz-linear-gradient(#3d68bf, #0d1423);
-  background: linear-gradient(#3d68bf, #0d1423);
+  background: linear-gradient(#3d68bf, #0d1423);*/
 }
 
 /* back, initially hidden pane */
 .back {
   transform: rotateY(180deg);
-  background: -webkit-linear-gradient(#c65e57, #873630);
+/*  background: -webkit-linear-gradient(#c65e57, #873630);
   background: -o-linear-gradient(#c65e57, #873630);
   background: -moz-linear-gradient(#c65e57, #873630);
-  background: linear-gradient(#c65e57, #873630);
+  background: linear-gradient(#c65e57, #873630);*/
 }
 .flip-enter-active {
   animation: flip-in 0.6s;

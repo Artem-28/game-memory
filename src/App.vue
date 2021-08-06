@@ -1,20 +1,23 @@
 <template>
-  <main-layout>
-    <plat-field></plat-field>
-<!--    <router-view/>-->
-  </main-layout>
+  <div id="app">
+    <main-layout>
+      <router-view/>
+    </main-layout>
+  </div>
 </template>
 
-
 <script>
-import PlatField from "./components/PlayField";
-import MainLayout from "./assets/layouts/MainLayout";
+import MainLayout from "./layouts/MainLayout";
+
 export default {
   components: {
     MainLayout,
-    PlatField
   },
 }
 </script>
 <style lang="scss">
+#app {
+  color: white;
+  font-family: 'Comfortaa', sans-serif;
+}
 </style>

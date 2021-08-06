@@ -14,10 +14,16 @@
             @flipping="cards[ number - 1 ].flip && !success && overturningCard(cards[ number - 1 ])"
         >
           <template v-slot:front>
-            <card :image-url="cards[ number - 1 ].frontSide" />
+            <card
+                :image-url="cards[ number - 1 ].frontSide"
+                :front="true"
+            />
           </template>
           <template v-slot:back>
-            <card :image-url="cards[ number - 1 ].backSide"/>
+            <card
+                :image-url="cards[ number - 1 ].backSide"
+                :back="true"
+            />
           </template>
         </FlipCard>
       </div>
@@ -27,7 +33,7 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 import FlipCard from "./FlipCard";
 import Card from "./Card";
 
@@ -58,6 +64,9 @@ export default {
       countingNumberOfCell: "Game/countingNumberOfCell",
       flipCard: "Game/flipCard",
       deleteCards: "Game/deleteCards",
+    }),
+    ...mapActions({
+      restartGame: "Game/restartGame",
     }),
 
     overturningCard(card){
@@ -102,8 +111,8 @@ export default {
     }
   },
   mounted() {
-    this.generatingGameCards()
-    this.countingNumberOfCell()
+    clearInterval(this.flipTimeout)
+   this.restartGame()
   },
 }
 </script>
@@ -111,12 +120,10 @@ export default {
 <style lang="scss" scoped>
 
 .game-field {
-  background: black;
   position: relative;
   display: block;
   max-height: 830px;
   max-width: 830px;
-  border: 1px solid black;
   &__content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
