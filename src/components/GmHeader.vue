@@ -3,20 +3,20 @@
     <div class="header__buttons">
       <div class="header__buttons__left">
         <router-link
-            v-for="buttons in buttonsLeft"
-            :key="buttons.id"
-            :to="buttons.path"
+            v-for="button in buttonsLeft"
+            :key="button.id"
+            :to="button.path"
         >
-          <gm-button :options="buttons.options"/>
+          <gm-button :options="button.options"/>
         </router-link>
       </div>
       <div class="header__buttons__right">
         <router-link
-            v-for="buttons in buttonRight"
-            :key="buttons.id"
-            :to="buttons.path"
+            v-for="button in buttonRight"
+            :key="button.id"
+            :to="button.path"
         >
-          <gm-button :options="buttons.options"/>
+          <gm-button :options="button.options" @click="button.event"/>
         </router-link>
       </div>
     </div>
@@ -25,48 +25,60 @@
 
 <script>
 import GmButton from "./GmButton";
+import {mapMutations} from "vuex";
 export default {
   name: "GmHeader",
   components: {GmButton},
-  data () {
-    return {
-      buttonsLeft: [
-        {
+  computed: {
+    isStartGame() {
+      return this.$store.state.Game.start
+    },
+    buttonsLeft() {
+      const buttonsLeft = {
+        game: {
           id: 1,
           path: '/',
           options: {
             width: '150px',
             height: '50px',
-            text: 'играть'
+            text: 'играть',
+            disabled: this.isStartGame
           }
         },
-        {
+        statistics: {
           id: 2,
           path: '/statistics',
           options: {
             width: '150px',
             height: '50px',
-            text: 'статистика'
+            text: 'статистика',
+            disabled: this.isStartGame
           }
         },
-      ],
-      buttonRight: [
-        {
+      }
+      return buttonsLeft
+    },
+    buttonRight() {
+      const buttonRight = {
+        logout: {
           id: 1,
           path: '/auth',
+          event: this.logout,
           options: {
             width: '150px',
             height: '50px',
-            text: 'выход'
+            text: 'выход',
+            disabled: this.isStartGame
           }
         },
-      ],
-    }
+      }
+      return buttonRight
+    },
   },
   methods: {
-    togglePage() {
-      console.log('toggle')
-    }
+    ...mapMutations({
+      logout: "Auth/logout",
+    }),
   }
 }
 </script>
@@ -74,15 +86,13 @@ export default {
 <style lang="scss" scoped>
 .header {
   width: 100%;
-  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid white;
   &__buttons {
-    padding: 0 10px;
+    padding: 20px 10px 0 10px;
     width: 100%;
-    max-width: 1100px;
+    max-width: 1350px;
     display: flex;
     justify-content: space-between;
   }

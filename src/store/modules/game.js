@@ -129,27 +129,27 @@ const cards = [
 export default {
     namespaced: true,
     state: {
-        numberOfCell: 0,
+        start: false,
+        numberOfCell: 36,
         cards: []
     },
     mutations: {
-        generatingGameCards: (state, payload) => {
-            const generateCards = [
-                ...payload,
-                ...payload.map( card => {
-                    return  {...card, externalId: state.cards.length + card.externalId}
-                })
-            ].sort(() => Math.round(Math.random() * 100) - 50);
-            state.cards = generateCards
+        generatingGameCards: (state) => {
+            const generateCards = []
+            cards.map(card => {
+                generateCards.push({...card})
+                generateCards.push({...card, externalId: state.cards.length + card.externalId})
+            })
+            state.cards = generateCards.sort(() => Math.round(Math.random() * 100) - 50)
         },
 
-        countingNumberOfCell: (state) => {
+        /*countingNumberOfCell: (state) => {
             state.numberOfCell = state.cards.length
-        },
+        },*/
 
         flipCard: (state, payload) => {
             state.cards = state.cards.map(card => {
-                if( card === payload) {
+                if (card === payload) {
                     card.flip = !card.flip
                 }
                 return card
@@ -158,24 +158,26 @@ export default {
 
         deleteCards: (state, payload) => {
             state.cards = state.cards.map((card, index) => {
-                if(card === payload.firstCard || card === payload.secondCard){
+                if (card === payload.firstCard || card === payload.secondCard) {
                     delete state.cards[index]
                     return
                 }
                 return card;
             })
         },
-        resetGame: (state) =>  {
+        resetGame: (state) => {
             state.cards = [];
-            state.numberOfCell = 0;
-        }
-    },
+        },
 
+        toggleStartGame: state => {
+            state.start = !state.start
+        },
+    },
     actions: {
         restartGame(context) {
             context.commit("resetGame");
-            context.commit("generatingGameCards", cards);
-            context.commit("countingNumberOfCell")
+            /*context.commit("generatingGameCards");*/
+           /* context.commit("countingNumberOfCell")*/
         }
     }
 }

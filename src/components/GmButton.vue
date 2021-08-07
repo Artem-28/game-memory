@@ -1,8 +1,10 @@
 <template>
   <button
       class="button"
+      :class="{disabled: options.disabled}"
       :style="style"
-      @click="$emit('click');"
+      @click="$emit('click')"
+      :disabled="options.disabled"
   >
     {{options.text}}
   </button>
@@ -35,7 +37,7 @@ export default {
   font-weight: 600;
   font-size: 18px;
   transition: all 0.5s;
-  &:hover {
+  &:not(.disabled):hover {
     border: 2px solid rgba(255, 255, 255, 0.7);
     color: rgba(255, 255, 255, 0.7);
     -webkit-box-shadow: 0px 0px 11px -1px rgba(255, 255, 255, 0.7);
@@ -47,6 +49,12 @@ export default {
   border: 2px solid rgba(255, 255, 255, 0.9);
   color: rgba(255, 255, 255, 0.9);
 }
+.button:disabled {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.2);
+  cursor: default;
+}
+
 
 
 </style>

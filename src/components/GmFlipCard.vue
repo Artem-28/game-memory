@@ -1,5 +1,5 @@
 <template>
-  <transition name="flip">
+  <transition appear name="flip">
     <div
         class="flip-container"
         :class="{hover: flip, active: isActive}"
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: "FlipCard",
+  name: "GmFlipCard",
   props: ['flip', 'isActive'],
 }
 </script>

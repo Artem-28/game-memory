@@ -8,16 +8,19 @@ const routes = [
   {
     path: '/',
     name: 'Game',
+    meta: { layout: 'main' },
     component: () => import('../views/GamePage')
   },
   {
     path: '/statistics',
     name: 'Statistics',
+    meta: { layout: 'main' },
     component: () => import('../views/StatisticsPage')
   },
   {
     path: '/auth',
     name: 'Auth',
+    meta: { layout: 'auth' },
     component: () => import('../views/AuthPage')
   },
 ]

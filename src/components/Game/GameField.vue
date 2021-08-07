@@ -3,12 +3,13 @@
     <div class="game-field__content">
       <div
           class="game-field__cell"
+          :class="{empty : !isStart}"
           v-for="number in numberOfCell"
           :key="number"
       >
         <FlipCard
             class="test"
-            v-if="cards[ number - 1 ]"
+            v-if="cards[ number - 1 ] && isStart"
             :flip="cards[ number - 1 ].flip"
             :is-active="!cards[ number - 1 ].flip"
             @flipping="cards[ number - 1 ].flip && !success && overturningCard(cards[ number - 1 ])"
@@ -34,8 +35,8 @@
 
 <script>
 import {mapMutations, mapActions} from 'vuex'
-import FlipCard from "./FlipCard";
-import Card from "./Card";
+import FlipCard from "../GmFlipCard";
+import Card from "./GameCard";
 
 export default {
   name: "PlayField",
@@ -57,13 +58,18 @@ export default {
     numberOfCell() {
       return this.$store.state.Game.numberOfCell;
     },
+    isStart() {
+      return this.$store.state.Game.start;
+    }
   },
   methods: {
     ...mapMutations({
       generatingGameCards: "Game/generatingGameCards",
-      countingNumberOfCell: "Game/countingNumberOfCell",
+      /*countingNumberOfCell: "Game/countingNumberOfCell",*/
       flipCard: "Game/flipCard",
       deleteCards: "Game/deleteCards",
+      incrementSteps: "Counter/incrementSteps",
+      updatePoints: "Counter/updatePoints",
     }),
     ...mapActions({
       restartGame: "Game/restartGame",
@@ -84,6 +90,7 @@ export default {
       const secondCard = this.selectedCards[1]
       if (firstCard.id === secondCard.id){
         this.success = true
+        this.updatePoints()
         clearTimeout(this.flipTimeout)
         setTimeout(() => {
           this.deleteCards({ firstCard, secondCard })
@@ -107,12 +114,15 @@ export default {
   },
   watch: {
     selectedCards(){
-      this.selectedCards.length === 2 && this.compareCards()
+      if( this.selectedCards.length === 2) {
+        this.compareCards()
+        this.incrementSteps()
+      }
     }
   },
   mounted() {
     clearInterval(this.flipTimeout)
-   this.restartGame()
+    this.restartGame()
   },
 }
 </script>
@@ -141,5 +151,11 @@ export default {
   content: '';
   display: block;
   padding-top: 100%;
+}
+.empty {
+  margin: 3px;
+  border-radius: 10px;
+  background:  rgba(255, 255, 255, 0.1);
+  /*color: rgba(255, 255, 255, 0.7);*/
 }
 </style>
