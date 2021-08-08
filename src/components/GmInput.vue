@@ -2,7 +2,7 @@
   <div class="gm-input">
     <div class="gm-input__label">
       <label><strong>{{label}}</strong></label>
-      <span v-if="false" class="gm-input__error-message">{{errorMessage}}</span>
+      <span v-if="invalid" class="gm-input__error-message">{{errorMessage}}</span>
     </div>
     <input
         :style="style"
@@ -10,6 +10,7 @@
         :type="type"
         :value="value"
         @input="$emit('input', $event.target.value)"
+        @blur="$emit('blur')"
     >
   </div>
 
@@ -18,7 +19,7 @@
 <script>
 export default {
   name: "GmInput",
-  props: ['options', 'label', 'errorMessage', 'type', 'value'],
+  props: ['options', 'label', 'errorMessage', 'type', 'value', 'invalid', 'id'],
   data() {
     return {
       style: {
@@ -27,6 +28,7 @@ export default {
       }
     }
   }
+
 }
 </script>
 

@@ -4,16 +4,18 @@
     <div class="registration__content">
       <div
           class="registration__control"
-          v-for="control in controls"
+          v-for="(control, key) in controls"
           :key="control.id"
       >
         <gm-input
             :options="control.options"
             :label="control.label"
             :name="control.name"
-            :error-message="control.errorMessage"
+            :error-message="validate[key] ? validate[key].message : ''"
+            :invalid="validate[key] ? !validate[key].isValid : true"
             :type="control.type"
             v-model="control.value"
+            @blur="touch(key)"
         />
       </div>
     </div>
@@ -25,6 +27,7 @@
       <gm-button
           :options="registrationBtnOption"
           @click="registration"
+          :disabled="$v.$invalid"
       />
     </div>
 
@@ -35,6 +38,8 @@
 import GmButton from "../GmButton";
 import GmInput from "../GmInput";
 import {mapActions} from "vuex";
+import {email, required, minLength, sameAs} from "vuelidate/lib/validators";
+
 export default {
   name: "GmRegistrationForm",
   components: {GmInput, GmButton},
@@ -56,47 +61,103 @@ export default {
           label: 'Введите ваш email',
           type: 'text',
           value: '',
-          errorMessage: 'Не корректный email',
           options: {
             width: '100%',
             height: '50px',
-          }
+          },
+          touch: false
         },
         name: {
           id: 2,
           label: 'Введите ваше имя',
           type: 'text',
           value: '',
-          errorMessage: 'Поле не должно быть пустым',
           options: {
             width: '100%',
             height: '50px',
-          }
+          },
+          touch: false
         },
         password: {
           id: 3,
           label: 'Введите пароль',
           value: '',
           type: 'password',
-          errorMessage: 'Поле не должно быть пустым',
           options: {
             width: '100%',
             height: '50px',
-          }
+          },
+          touch: false
         },
         confirmPassword: {
           id: 4,
           label: 'Повторите пароль',
           type: 'password',
           value: '',
-          errorMessage: 'Пароли не совпадают',
           options: {
             width: '100%',
             height: '50px',
-          }
+          },
+          touch: false
         }
       },
     }
+  },
+  validations: {
+    controls: {
+      email: {
+        value: {required, email}
+      },
+      name: {
+        value: {required}
+      },
+      password: {
+        value: {required, minLength: minLength(6)}
+      },
+      confirmPassword: {
+        value: {sameAs: sameAs(function () {return this.controls.password.value})}
+      }
+    }
+  },
+  computed: {
+    validate() {
+      const controls = {
+        email: {
+          isValid: true,
+          message: ''
+        },
+        name: {
+          isValid: true,
+          message: ''
+        },
+        password: {
+          isValid: true,
+          message: ''
+        },
+        confirmPassword: {
+          isValid: true,
+          message: ''
+        },
+      }
+      Object.keys(controls).map(key => {
+        if(this.$v.controls[key].value.required !== undefined &&!this.$v.controls[key].value.required && this.controls[key].touch) {
+          controls[key].isValid = false
+          controls[key].message = 'Поле обязательно для заполнения'
+          return controls
+        }
+      })
+      if(!this.$v.controls.email.value.email && this.controls.email.touch) {
+        controls.email.isValid = false
+        controls.email.message = 'Некорректный email'
+        return controls
+      }
+      if(!this.$v.controls.confirmPassword.value.sameAs && this.controls.confirmPassword.touch) {
+        controls.confirmPassword.isValid = false
+        controls.confirmPassword.message = 'Пароли не совпадают'
+        return controls
+      }
+      return controls
+    },
   },
   methods: {
     ...mapActions({
@@ -109,6 +170,9 @@ export default {
         password: this.controls.password.value
       }
       await this.register(formData)
+    },
+    touch(key){
+      this.controls[key].touch = true
     }
   }
 }
