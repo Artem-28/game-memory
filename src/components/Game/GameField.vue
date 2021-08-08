@@ -16,7 +16,7 @@
         >
           <template v-slot:front>
             <card
-                :image-url="cards[ number - 1 ].frontSide"
+                :image-url="!cards[ number - 1 ].flip ? cards[ number - 1 ].frontSide: ''"
                 :front="true"
             />
           </template>
