@@ -1,10 +1,10 @@
 <template>
   <button
       class="button"
-      :class="{disabled: options.disabled}"
+      :class="{disabled: disabled}"
       :style="style"
       @click="$emit('click')"
-      :disabled="options.disabled"
+      :disabled="disabled"
   >
     {{options.text}}
   </button>
@@ -13,7 +13,7 @@
 <script>
 export default {
   name: "GmButton",
-  props: ['options', 'text'],
+  props: ['options', 'text', 'disabled'],
   data() {
     return {
       style: {

@@ -7,7 +7,10 @@
             :key="button.id"
             :to="button.path"
         >
-          <gm-button :options="button.options"/>
+          <gm-button
+              :options="button.options"
+              :disabled="button.disabled"
+          />
         </router-link>
       </div>
       <div class="header__buttons__right">
@@ -16,7 +19,11 @@
             :key="button.id"
             :to="button.path"
         >
-          <gm-button :options="button.options" @click="button.event"/>
+          <gm-button
+              :options="button.options"
+              :disabled="button.disabled"
+              @click="button.event"
+          />
         </router-link>
       </div>
     </div>
@@ -38,21 +45,21 @@ export default {
         game: {
           id: 1,
           path: '/',
+          disabled: this.isStartGame,
           options: {
             width: '150px',
             height: '50px',
             text: 'играть',
-            disabled: this.isStartGame
           }
         },
         statistics: {
           id: 2,
           path: '/statistics',
+          disabled: this.isStartGame,
           options: {
             width: '150px',
             height: '50px',
             text: 'статистика',
-            disabled: this.isStartGame
           }
         },
       }
@@ -64,11 +71,11 @@ export default {
           id: 1,
           path: '/auth',
           event: this.logout,
+          disabled: this.isStartGame,
           options: {
             width: '150px',
             height: '50px',
             text: 'выход',
-            disabled: this.isStartGame
           }
         },
       }

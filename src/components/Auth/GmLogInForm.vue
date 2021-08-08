@@ -4,15 +4,18 @@
     <div class="login__content">
       <div
           class="login__control"
-          v-for="control in controls"
+          v-for="(control, key) in controls"
           :key="control.id"
       >
         <gm-input
             :options="control.options"
             :label="control.label"
-            :error-message="control.errorMessage"
+            :error-message="validate[key] ? validate[key].message : ''"
             :type="control.type"
              v-model="control.value"
+            :id="control.name"
+            :invalid="validate[key] ? !validate[key].isValid : false"
+            @blur="touch(key)"
         />
       </div>
     </div>
@@ -24,6 +27,7 @@
       <gm-button
           :options="logInBtnOption"
           @click="authorization"
+          :disabled="$v.$invalid"
       />
     </div>
 
@@ -34,6 +38,7 @@
 import GmButton from "../GmButton";
 import GmInput from "../GmInput";
 import {mapActions} from "vuex";
+import {email, required} from 'vuelidate/lib/validators'
 export default {
   name: "GmLoginForm",
   components: {GmInput, GmButton},
@@ -54,28 +59,68 @@ export default {
       controls: {
         email: {
           id: 1,
+          name: 'email',
           label: 'Введите ваш email',
           type: 'text',
           value: '',
-          errorMessage: 'Не корректный email',
           options: {
             width: '100%',
             height: '50px',
           },
+          touch: false
         },
         password: {
           id: 3,
           label: 'Введите пароль',
+          name: 'password',
           value: '',
           type: 'password',
-          errorMessage: 'Поле не должно быть пустым',
           options: {
             width: '100%',
             height: '50px',
-          }
+          },
+          touch: false
         },
       },
     }
+  },
+  validations: {
+    controls: {
+      email: {
+        value: {required, email}
+      },
+      password: {
+        value: {required}
+      }
+    }
+  },
+  computed: {
+    validate() {
+      const controls = {
+        email: {
+          isValid: true,
+          message: ''
+        },
+        password: {
+          isValid: true,
+          message: ''
+        }
+      }
+      Object.keys(controls).map(key => {
+        if(this.$v.controls[key].value.required !== undefined &&!this.$v.controls[key].value.required && this.controls[key].touch) {
+          controls[key].isValid = false
+          controls[key].message = 'Поле обязательно для заполнения'
+          return controls
+        }
+      })
+
+      if(!this.$v.controls.email.value.email && this.controls.email.touch) {
+        controls.email.isValid = false
+        controls.email.message = 'Некорректный email'
+        return controls
+      }
+      return controls
+    },
   },
   methods: {
     ...mapActions({
@@ -87,8 +132,11 @@ export default {
         password: this.controls.password.value
       }
       await this.login(formData);
+    },
+    touch(key){
+      this.controls[key].touch = true
     }
-  }
+  },
 }
 </script>
 
