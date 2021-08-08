@@ -1,7 +1,7 @@
 <template>
-  <gm-flip-card :flip="isRegistration">
+  <gm-flip-card :flip="isRegistration" :absolute="isRegistration">
     <template v-slot:front>
-      <gm-login-form @flip="isRegistration = true" />
+      <gm-login-form @flip="isRegistration = true"/>
     </template>
     <template v-slot:back>
       <gm-registration-form @flip="isRegistration = false"/>

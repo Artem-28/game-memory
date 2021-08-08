@@ -6,10 +6,10 @@
         @click="$emit('flipping', $event);"
     >
       <div class="flipper">
-        <div class="front" :class="{absolute: flip}">
+        <div class="front">
           <slot name="front" />
         </div>
-        <div class="back" :class="{absolute: !flip}">
+        <div class="back">
           <slot name="back" />
         </div>
       </div>
@@ -20,14 +20,11 @@
 <script>
 export default {
   name: "GmFlipCard",
-  props: ['flip', 'isActive'],
+  props: ['flip', 'isActive', 'absolute'],
 }
 </script>
 
 <style scoped>
-.absolute {
-  position: absolute;
-}
 
 .flip-container {
   perspective: 1000px;
@@ -61,7 +58,7 @@ export default {
 /* hide back of pane during swap */
 .front, .back {
   backface-visibility: hidden;
-  /*position: absolute;*/
+  position: absolute;
   top: 0;
   left: 0;
 }
