@@ -18,6 +18,7 @@ export default {
 
 <style lang="scss" scoped>
 .main-layout {
+  user-select: none;
   display: flex;
   flex-direction: column;
   width: 100%;

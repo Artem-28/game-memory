@@ -1,6 +1,6 @@
 <template>
 <div class="card" :class="{back, front}">
-  <div v-if="visible" class="card__image">
+  <div class="card__image">
     <img :src="require(`@/assets/images/${imageUrl}`)">
   </div>
 </div>
@@ -9,7 +9,7 @@
 <script>
 export default {
   name: "GameCard",
-  props: ['imageUrl', 'back', 'front', 'visible']
+  props: ['imageUrl', 'back', 'front']
 }
 </script>
 

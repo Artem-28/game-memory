@@ -16,14 +16,12 @@
         >
           <template v-slot:front>
             <card
-                :visible="!cards[ number - 1 ].flip"
                 :image-url="cards[ number - 1 ].frontSide"
                 :front="true"
             />
           </template>
           <template v-slot:back>
             <card
-                :visible="true"
                 :image-url="cards[ number - 1 ].backSide"
                 :back="true"
             />
