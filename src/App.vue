@@ -23,8 +23,8 @@ export default {
     },
   },
   mounted() {
-    const path = this.$store.state.Auth.currentUser ? '/' : '/auth';
-    this.$router.push(path);
+   /* const path = this.$store.state.Auth.currentUser ? '/' : '/auth';
+    this.$router.push(path);*/
   }
 }
 </script>
