@@ -6,10 +6,10 @@
         @click="$emit('flipping', $event);"
     >
       <div class="flipper">
-        <div class="front">
+        <div class="front" :class="{absolute: flip}">
           <slot name="front" />
         </div>
-        <div class="back">
+        <div class="back" :class="{absolute: !flip}">
           <slot name="back" />
         </div>
       </div>
@@ -25,11 +25,14 @@ export default {
 </script>
 
 <style scoped>
-/* entire container, keeps perspective */
+.absolute {
+  position: absolute;
+}
+
 .flip-container {
   perspective: 1000px;
 }
-/* flip the pane when hovered */
+
 .flip-container.hover .flipper {
   transform: rotateY(180deg);
 }
@@ -58,29 +61,21 @@ export default {
 /* hide back of pane during swap */
 .front, .back {
   backface-visibility: hidden;
-  position: absolute;
+  /*position: absolute;*/
   top: 0;
   left: 0;
 }
 
-/* front pane, placed above back */
+
 .front {
   z-index: 2;
   /* for firefox 31 */
   transform: rotateY(0deg);
-/*  background: -webkit-linear-gradient(#3d68bf, #0d1423);
-  background: -o-linear-gradient(#3d68bf, #0d1423);
-  background: -moz-linear-gradient(#3d68bf, #0d1423);
-  background: linear-gradient(#3d68bf, #0d1423);*/
 }
 
-/* back, initially hidden pane */
+
 .back {
   transform: rotateY(180deg);
-/*  background: -webkit-linear-gradient(#c65e57, #873630);
-  background: -o-linear-gradient(#c65e57, #873630);
-  background: -moz-linear-gradient(#c65e57, #873630);
-  background: linear-gradient(#c65e57, #873630);*/
 }
 .flip-enter-active {
   animation: flip-in 0.6s;
