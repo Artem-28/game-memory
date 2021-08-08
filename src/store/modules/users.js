@@ -3,12 +3,8 @@ import firebase from "firebase/app";
 export default {
     namespaced: true,
     state: {
+        currentUser: null,
         users: {}
-    },
-    getters: {
-       /* users: state => {
-            return Object.keys(state.users).map(key => state.users[key]).sort(user => user.points)
-        }*/
     },
     mutations: {
         setUsers: (state, payload) => {
@@ -18,6 +14,12 @@ export default {
                 return user
             }).sort((userA, userB) => userB.points - userA.points)
             state.users = users
+        },
+        updateUserPoints: (state, payload) => {
+            state.currentUser.points = payload
+        },
+        updateCurrentUser: (state, payload) => {
+            state.currentUser = payload
         }
     },
     actions: {
@@ -28,6 +30,25 @@ export default {
                 commit('setUsers', users)
             } catch (error) {
                 console.log(error)
+            }
+       },
+        getUserByUid: async ({commit}, uid) => {
+           try {
+               const data = await firebase.database().ref(`/users/${uid}`).get()
+               const user = data.val()
+               commit('updateCurrentUser', user)
+           } catch (error) {
+               console.log(error)
+           }
+        },
+        updateUser: async ({state, commit}, {uid, points}) => {
+           console.log(uid)
+           const totalPoints = +state.currentUser.points + points
+            try {
+                await firebase.database().ref(`/users/${uid}/points`).set(totalPoints)
+                commit('updateUserPoints', totalPoints)
+            } catch (error) {
+               console.log(error)
             }
         }
     }

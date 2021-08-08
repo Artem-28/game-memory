@@ -8,6 +8,7 @@ export default {
             second: 0,
             minutes: 0
         },
+        successSteps: 0,
         successInterval: {
             second: 0,
             steps: 0,
@@ -15,9 +16,6 @@ export default {
     },
     getters: {
         timer: state => `${displayUnitOfTime(state.timer.minutes)} : ${displayUnitOfTime(state.timer.second)}`,
-        points: state => {
-
-        }
     },
     mutations: {
         updateTime: state => {
@@ -39,15 +37,16 @@ export default {
             state.steps++
             state.successInterval.steps ++
         },
-        restartSuccessInterval: state => {
-            state.successInterval.steps = 0
-            state.successInterval.second = 0
-        },
+
         updatePoints: state => {
             const maxPoints = 100000
             const steps = state.successInterval.steps
             const second = state.successInterval.second
-            const points = Math.round(maxPoints / second / steps)
+            let points = Math.round(maxPoints / second / steps)
+            if(points > 5000){
+                points = 5000
+            }
+            state.successSteps ++
             state.successInterval.steps = 0
             state.successInterval.second = 0
             state.points += points;

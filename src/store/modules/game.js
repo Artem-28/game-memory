@@ -131,7 +131,12 @@ export default {
     state: {
         start: false,
         numberOfCell: 36,
-        cards: []
+        cards: [],
+        resultGame: {
+            gameOver: false,
+            message: '',
+            points: 0
+        }
     },
     mutations: {
         generatingGameCards: (state) => {
@@ -142,10 +147,6 @@ export default {
             })
             state.cards = generateCards.sort(() => Math.round(Math.random() * 100) - 50)
         },
-
-        /*countingNumberOfCell: (state) => {
-            state.numberOfCell = state.cards.length
-        },*/
 
         flipCard: (state, payload) => {
             state.cards = state.cards.map(card => {
@@ -172,6 +173,16 @@ export default {
         toggleStartGame: state => {
             state.start = !state.start
         },
+        gameOver: (state, {message, points}) => {
+            state.resultGame.gameOver = true;
+            state.resultGame.message = message;
+            state.resultGame.points = points;
+        },
+        resetResultGame: state => {
+            state.resultGame.gameOver = false;
+            state.resultGame.message = '';
+            state.resultGame.points = 0;
+        }
     },
     actions: {
         restartGame(context) {

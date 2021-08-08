@@ -60,19 +60,24 @@ export default {
     },
     isStart() {
       return this.$store.state.Game.start;
+    },
+    finishGame() {
+      return this.$store.state.Game.numberOfCell / 2 === this.$store.state.Counter.successSteps
     }
   },
   methods: {
     ...mapMutations({
       generatingGameCards: "Game/generatingGameCards",
-      /*countingNumberOfCell: "Game/countingNumberOfCell",*/
       flipCard: "Game/flipCard",
       deleteCards: "Game/deleteCards",
       incrementSteps: "Counter/incrementSteps",
       updatePoints: "Counter/updatePoints",
+      gameOver: "Game/gameOver",
+      toggleStartGame: "Game/toggleStartGame",
     }),
     ...mapActions({
       restartGame: "Game/restartGame",
+      updateUser: "Users/updateUser",
     }),
 
     overturningCard(card){
@@ -117,6 +122,15 @@ export default {
       if( this.selectedCards.length === 2) {
         this.compareCards()
         this.incrementSteps()
+      }
+    },
+    async finishGame() {
+      if(this.finishGame) {
+        const points = this.$store.state.Counter.points
+        this.toggleStartGame()
+        const uid = this.$store.state.Auth.currentUser.uid
+        await this.updateUser({uid, points})
+        this.gameOver({message: 'Вы выиграли', points})
       }
     }
   },

@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="counter__button">
-        <gm-button :options="buttonOptions" @click="buttonOptions.event"/>
+        <gm-button :options="buttonOptions" @click="toggleStartGame"/>
       </div>
     </div>
   </div>
@@ -35,8 +35,9 @@ export default {
   components: {GmButton},
   data() {
     return {
-      startsButton: {
-
+      buttonOptions: {
+        width: '100%',
+        height: '50px',
         text: 'старт'
       },
       timerInterval: null,
@@ -46,25 +47,14 @@ export default {
     ...mapGetters({
       timer: "Counter/timer",
     }),
-    buttonOptions() {
-      const isStart = this.$store.state.Game.start
-      const options = {
-        width: '100%',
-        height: '50px',
-        text: 'старт',
-        event: this.start
-      }
-      if (isStart) {
-        options.text = 'сдаться'
-        options.event = this.stop;
-      }
-      return options
-    },
     steps() {
       return this.$store.state.Counter.steps
     },
     points() {
       return this.$store.state.Counter.points
+    },
+    isStartGame() {
+      return this.$store.state.Game.start
     }
   },
   methods: {
@@ -74,19 +64,24 @@ export default {
       resetGame: "Game/resetGame",
       generateGameCards: "Game/generatingGameCards",
       resetCounter: "Counter/resetCounter",
+      gameOver: "Game/gameOver",
     }),
-    start() {
+  },
+  watch: {
+    isStartGame() {
+      if( !this.isStartGame ) {
+        this.buttonOptions.text = 'старт'
+        clearInterval(this.timerInterval)
+        this.resetGame()
+        this.resetCounter()
+        this.gameOver({message: 'Вы проиграли', points: 0})
+        return
+      }
+      this.buttonOptions.text = 'сдаться'
       this.generateGameCards()
-      this.toggleStartGame();
       this.timerInterval = setInterval(() => {
         this.updateTime()
       }, 1000);
-    },
-    stop() {
-      this.toggleStartGame()
-      clearInterval(this.timerInterval)
-      this.resetGame()
-      this.resetCounter()
     }
   }
 }
